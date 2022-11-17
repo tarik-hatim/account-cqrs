@@ -1,11 +1,14 @@
-package com.thatim.accountcqrs.commonapi.commands;
+package com.thatim.accountcqrs.commonapi.events;
+
 
 import lombok.Getter;
 
-public class CreateAccountCommand extends BaseCommand<String>{
+public class CreatedAccountEvent extends BaseEvent<String> {
+
     @Getter private double initialBalance;
     @Getter private String currency;
-    public CreateAccountCommand(String id, double initialBalance, String currency) {
+
+    public CreatedAccountEvent(String id, double initialBalance, String currency) {
         super(id);
         this.initialBalance = initialBalance;
         this.currency = currency;
