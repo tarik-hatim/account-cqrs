@@ -2,7 +2,11 @@ package com.thatim.accountcqrs.commands.controllers;
 
 
 import com.thatim.accountcqrs.commonapi.commands.CreateAccountCommand;
+import com.thatim.accountcqrs.commonapi.commands.CreditAccountCommand;
+import com.thatim.accountcqrs.commonapi.commands.DebitAccountCommand;
 import com.thatim.accountcqrs.commonapi.dtos.CreateAccountRequestDTO;
+import com.thatim.accountcqrs.commonapi.dtos.CreditAccountRequestDTO;
+import com.thatim.accountcqrs.commonapi.dtos.DebitAccountRequestDTO;
 import lombok.AllArgsConstructor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventsourcing.eventstore.EventStore;
@@ -23,21 +27,36 @@ public class AccountCommandController {
 
     @PostMapping("/create")
     public CompletableFuture<String> createAccount(@RequestBody CreateAccountRequestDTO request) {
-        CompletableFuture<String> commandResponse = commandGateway.send(new CreateAccountCommand(
+        return commandGateway.send(new CreateAccountCommand(
                 UUID.randomUUID().toString(),
                 request.getInitialBalance(),
                 request.getCurrency()
         ));
-        return commandResponse;
     }
 
+    @PutMapping("/credit")
+    public CompletableFuture<String> creditAccount(@RequestBody CreditAccountRequestDTO requestDTO) {
+        return commandGateway.send(new CreditAccountCommand(
+                requestDTO.getId(),
+                requestDTO.getAmount(),
+                requestDTO.getCurrency()
+        ));
+    }
+
+    @PutMapping("/debit")
+    public CompletableFuture<String> debitAccount(@RequestBody DebitAccountRequestDTO requestDTO) {
+        return commandGateway.send(new DebitAccountCommand(
+                requestDTO.getId(),
+                requestDTO.getAmount(),
+                requestDTO.getCurrency()
+        ));
+    }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> exceptionHandler(Exception exception) {
-        ResponseEntity<String> responseEntity = new ResponseEntity<>(
+        return new ResponseEntity<>(
                 exception.getMessage(),
                 HttpStatus.INTERNAL_SERVER_ERROR
         );
-        return responseEntity;
     }
 
     @GetMapping("/eventStore/{accountId}")
