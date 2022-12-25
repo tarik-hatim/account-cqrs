@@ -16,6 +16,8 @@ import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
 
+import java.util.Date;
+
 @Aggregate
 public class AccountAggregate {
 
@@ -35,8 +37,8 @@ public class AccountAggregate {
         AggregateLifecycle.apply(new CreatedAccountEvent(
                 createAccountCommand.getId(),
                 createAccountCommand.getInitialBalance(),
-                createAccountCommand.getCurrency()
-        ));
+                createAccountCommand.getCurrency(),
+                AccountStatus.CREATED));
     }
 
     @CommandHandler
@@ -56,8 +58,8 @@ public class AccountAggregate {
         AggregateLifecycle.apply(new DebitAccountEvent(
                 debitAccountCommand.getId(),
                 debitAccountCommand.getAmount(),
-                debitAccountCommand.getCurrency()
-        ));
+                debitAccountCommand.getCurrency(),
+                new Date()));
     }
     @EventSourcingHandler
     public void on(CreatedAccountEvent event) {
