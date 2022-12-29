@@ -48,8 +48,8 @@ public class AccountAggregate {
         AggregateLifecycle.apply(new CreditedAccountEvent(
                 creditAccountCommand.getId(),
                 creditAccountCommand.getAmount(),
-                creditAccountCommand.getCurrency()
-        ));
+                creditAccountCommand.getCurrency(),
+                new Date()));
     }
     @CommandHandler
     public void handle(DebitAccountCommand debitAccountCommand) {
